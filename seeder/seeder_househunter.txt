@@ -1,0 +1,19 @@
+-- 1. CREAR LA RESERVA DEL EVENTO CORPORATIVO
+-- Vinculamos a la empresa Globant (id_empresa = 2) y definimos el código único
+INSERT INTO `reservas_hotel` (`id`, `id_empresa`, `codigo_unico_evento`, `fecha_inicio`, `fecha_fin`, `cantidad_estimada_asistentes`) VALUES
+(1, 2, 'GLOBANT-2026', '2026-06-01', '2026-06-05', 50);
+
+-- 2. CARGAR LA LISTA DE INVITADOS PREVIA AUTORIZADA
+-- Vinculamos a los usuarios que ya tenés creados usando sus DNI reales
+INSERT INTO `lista_invitados_previa` (`id`, `id_reserva`, `dni`, `nombre`, `apellido`, `celular`, `dni_companero`) VALUES
+(1, 1, '44555666', 'Luca', 'Borrelli', '1122334455', '44728397'),
+(2, 1, '44728397', 'Franco', 'Colapinto', '1155667788', '44555666'),
+(3, 1, '12345678', 'Robert', 'Trebor', '1199887766', '0');
+
+-- 3. CARGAR EL CRONOGRAMA DE ACTIVIDADES PARA EL EVENTO
+INSERT INTO `actividades` (`id`, `id_reserva`, `nombre`, `descripcion`, `importancia`, `categoria`, `hora_actividad`) VALUES
+(1, 1, 'Keynote de Apertura: Innovación AI', 'Presentación de las metas tecnológicas y bienvenida institucional.', 'Alta', 'Charlas', '09:00:00'),
+(2, 1, 'Workshop Técnico: Java Avanzado', 'Laboratorio práctico interactivo sobre concurrencia y JPA.', 'Media', 'Cowork', '14:30:00'),
+(3, 1, 'After Office & Networking', 'Espacio libre de recreación con barra de tragos y música en vivo.', 'Baja', 'Recreacion', '19:00:00');
+
+COMMIT 

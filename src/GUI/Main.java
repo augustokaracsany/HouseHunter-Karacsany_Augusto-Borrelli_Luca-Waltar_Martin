@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         UsuariosRepository repo = new UsuariosController();
         
-        // Imagen institucional o de bienvenida del proyecto
+        // Imagen institucional o de bienvenida del proyecto, no editar ruta o nombre del archivo por favor.
         ImageIcon iconoBienvenida = new ImageIcon("src/img/HouseHunter_Menu-Principal.gif");
 
         String textoHtml = "<html><body style='width: 300px; text-align: center;'>"
@@ -43,7 +43,7 @@ public class Main {
                             JOptionPane.showMessageDialog(null, "¡Login exitoso!\nBienvenido " + usuario.getNombre());
                             usuario.mostrarMenu();
                             
-                            // Log por consola del listado técnico para verificación
+                            // Log por consola/terminal del listado técnico para Verificación
                             System.out.println("--- LISTA DE USUARIOS EN BASE DE DATOS ---");
                             LinkedList<Persona> todos = repo.listarTodos();
                             for (Persona p : todos) {
@@ -72,22 +72,30 @@ public class Main {
 
                         if (seleccionRol != -1) {
                             Rol rolElegido = (seleccionRol == 0) ? Rol.EMPRESA : Rol.INVITADO;
-                            String dato1 = "", dato2 = "";
+                            String dato1 = "", dato2 = "", dato3 = ""; // Agregado el dato3, no volver a borrar.
 
                             if (rolElegido == Rol.EMPRESA) {
                                 dato1 = JOptionPane.showInputDialog(null, "Ingrese el CUIT de la empresa:", "Datos Empresa", JOptionPane.QUESTION_MESSAGE);
                                 dato2 = JOptionPane.showInputDialog(null, "Ingrese la Razón Social:", "Datos Empresa", JOptionPane.QUESTION_MESSAGE);
+                                dato3 = null; // Empresa no usa un tercer dato.
                             } else {
                                 dato1 = JOptionPane.showInputDialog(null, "Ingrese su Nombre:", "Datos Invitado", JOptionPane.QUESTION_MESSAGE);
                                 dato2 = JOptionPane.showInputDialog(null, "Ingrese su Apellido:", "Datos Invitado", JOptionPane.QUESTION_MESSAGE);
+                                dato3 = JOptionPane.showInputDialog(null, "Ingrese su DNI:", "Datos Invitado", JOptionPane.QUESTION_MESSAGE); // 🚀 Capturamos DNI
                             }
 
-                            if (dato1 != null && dato2 != null && !dato1.trim().isEmpty() && !dato2.trim().isEmpty()) {
-                                boolean exito = repo.registrar(emailReg, passReg, rolElegido, dato1, dato2);
+                            // Validación Agregando 'dato3' para el Caso de Invitado.
+                            boolean datosValidos = (rolElegido == Rol.EMPRESA) 
+                                ? (dato1 != null && dato2 != null && !dato1.trim().isEmpty() && !dato2.trim().isEmpty())
+                                : (dato1 != null && dato2 != null && dato3 != null && !dato1.trim().isEmpty() && !dato2.trim().isEmpty() && !dato3.trim().isEmpty());
+
+                            if (datosValidos) {
+                                // Pasamos los 6 parámetros requeridos por el Nuevo Contrato Fixeado.
+                                boolean exito = repo.registrar(emailReg, passReg, rolElegido, dato1, dato2, dato3);
                                 if (exito) {
                                     JOptionPane.showMessageDialog(null, "¡Registro completado de forma segura!\nYa puede iniciar sesión con sus credenciales.");
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Hubo un error al guardar los datos. El email podría estar duplicado.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Hubo un error al guardar los datos. El email o DNI podría estar duplicado.", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                         }

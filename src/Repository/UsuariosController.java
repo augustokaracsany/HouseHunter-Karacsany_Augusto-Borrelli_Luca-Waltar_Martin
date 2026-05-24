@@ -92,27 +92,27 @@ public class UsuariosController extends UsuariosRepository {
     }
 
     @Override
-    public boolean registrar(String email, String password, Rol rol, String datoPrincipal, String datoSecundario) {
+    public boolean registrar(String email, String password, Rol rol, String datoPrincipal, String datoSecundario, String datoTerciario) {
         String sqlUsuario = "INSERT INTO usuarios (email, password, rol) VALUES (?, ?, ?)";
         Connection con = ConexionController.getInstance().getConnection();
         
         try {
-            // Desactivamos el AUTOCOMMIT para manejarlo como una Única Transacción Segura.
+        	// Desactivamos el AUTOCOMMIT para manejarlo como una Única Transacción Segura.
             con.setAutoCommit(false);
             
             try (PreparedStatement psUser = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 psUser.setString(1, email);
-                // 🔐 Acá se Encripta la Clave con la configuración de Gamaliel.
+                // Acá se Encripta la Clave con la configuración de Gamaliel.
                 psUser.setString(2, Hashing.hash(password));
                 psUser.setString(3, rol.toString());
                 
+                // Obtenemos el ID Auto-Incremental asignado automáticamente por MySQL.
                 int filasAfectadas = psUser.executeUpdate();
                 if (filasAfectadas == 0) {
                     con.rollback();
                     return false;
                 }
                 
-                // Obtenemos el ID Auto-Incremental asignado automáticamente por MySQL.
                 int idUsuarioGenerado = 0;
                 try (ResultSet generatedKeys = psUser.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -133,19 +133,19 @@ public class UsuariosController extends UsuariosRepository {
                     String sqlPersona = "INSERT INTO datos_personas (id_usuario, nombre, apellido, dni) VALUES (?, ?, ?, ?)";
                     try (PreparedStatement psPers = con.prepareStatement(sqlPersona)) {
                         psPers.setInt(1, idUsuarioGenerado);
-                        psPers.setString(2, datoPrincipal);  // Nombre.
-                        psPers.setString(3, datoSecundario); // Apellido.
-                        psPers.setString(4, "99999999");    // DNI genérico por default para cumplir con la estructura.
+                        psPers.setString(2, datoPrincipal);   // Nombre.
+                        psPers.setString(3, datoSecundario);  // Apellido.
+                        psPers.setString(4, datoTerciario);   // 🚀 Ahora el DNI debería funcionar, como nadie se dió cuenta de esto antes.
                         psPers.executeUpdate();
                     }
                 }
                 
-                con.commit(); // Guardamos los cambios confirmados de ambas tablas.
+                con.commit();
                 System.out.println("ℹ️ Hashing/SQL: Usuario registrado con éxito: " + email);
                 return true;
                 
             } catch (SQLException e) {
-                con.rollback(); // Si algo falla en el proceso intermedio, volvemos para atrás.
+                con.rollback();
                 System.err.println("Error en transacción de registro: " + e.getMessage());
                 return false;
             } finally {

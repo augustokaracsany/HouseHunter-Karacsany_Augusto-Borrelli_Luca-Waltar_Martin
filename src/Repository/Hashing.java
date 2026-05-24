@@ -1,5 +1,5 @@
 package Repository;
-
+// Todo esto ni se les ocurra tocarlo porque lo robé directo del Profe.
 import org.mindrot.jbcrypt.BCrypt;
 
 public interface Hashing {
