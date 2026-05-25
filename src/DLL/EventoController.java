@@ -224,21 +224,21 @@ public class EventoController {
                     int porcentajeOcupacion = totalInvitados > 0 ? (totalCheckins * 100 / totalInvitados) : 0;
 
                     reporte.append("<html><body style='width: 300px;'>");
-                    reporte.append("<h2 style='text-align: center; color: #2c3e50;'>📊 Reporte Consolidado</h2>");
+                    reporte.append("<h2 style='text-align: center; color: #2c3e50;'> Reporte Consolidado</h2>");
                     reporte.append("<p style='text-align: center; margin-top:0;'><b>Evento:</b> ").append(codigoEvento).append("</p><hr>");
                     reporte.append("<table style='width: 100%; border-collapse: collapse;'>");
-                    reporte.append("<tr><td><b>📋 Invitados en Lista:</b></td><td style='text-align: right;'>").append(totalInvitados).append("</td></tr>");
-                    reporte.append("<tr><td><b>🏨 Check-ins Exitosos:</b></td><td style='text-align: right;'>").append(totalCheckins).append("</td></tr>");
-                    reporte.append("<tr><td><b>📉 Porcentaje Ocupación:</b></td><td style='text-align: right; color: green;'><b>").append(porcentajeOcupacion).append("%</b></td></tr>");
+                    reporte.append("<tr><td><b> Invitados en Lista:</b></td><td style='text-align: right;'>").append(totalInvitados).append("</td></tr>");
+                    reporte.append("<tr><td><b> Check-ins Exitosos:</b></td><td style='text-align: right;'>").append(totalCheckins).append("</td></tr>");
+                    reporte.append("<tr><td><b> Porcentaje Ocupación:</b></td><td style='text-align: right; color: green;'><b>").append(porcentajeOcupacion).append("%</b></td></tr>");
                     reporte.append("<tr><td colspan='2'><hr style='border-top: 1px dashed #ccc;'></td></tr>");
-                    reporte.append("<tr><td><b>🎮 Asistencias Totales:</b></td><td style='text-align: right; color: #2980b9;'><b>").append(totalAsistencias).append("</b></td></tr>");
+                    reporte.append("<tr><td><b> Asistencias Totales:</b></td><td style='text-align: right; color: #2980b9;'><b>").append(totalAsistencias).append("</b></td></tr>");
                     reporte.append("</table></body></html>");
                     return reporte.toString();
                 }
-                return "<html><body>❌ Código inválido.</body></html>";
+                return "<html><body> Código inválido.</body></html>";
             }
         } catch (SQLException e) {
-            return "<html><body>❌ Error técnico.</body></html>";
+            return "<html><body> Error técnico.</body></html>";
         }
     }
 }

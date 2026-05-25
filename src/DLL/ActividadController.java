@@ -46,16 +46,16 @@ public class ActividadController {
                     if (importancia.equalsIgnoreCase("Alta")) colorImportancia = "red";
                     else if (importancia.equalsIgnoreCase("Media")) colorImportancia = "orange";
 
-                    cronograma.append("<p style='margin-bottom: 2px;'><b>⏱️ ").append(hora).append(" hs</b> - ").append(nombre).append("</p>");
+                    cronograma.append("<p style='margin-bottom: 2px;'><b> ").append(hora).append(" hs</b> - ").append(nombre).append("</p>");
                     cronograma.append("<p style='margin-left: 15px; color: #555; margin-top: 0px;'><i>").append(desc != null ? desc : "Sin descripción").append("</i><br>");
-                    cronograma.append("<small>📁 Cat: ").append(categoria).append(" | <font color='").append(colorImportancia).append("'>🔥 ").append(importancia).append("</font></small></p>");
+                    cronograma.append("<small> Cat: ").append(categoria).append(" | <font color='").append(colorImportancia).append("'> ").append(importancia).append("</font></small></p>");
                     cronograma.append("<hr style='border-top: 1px dashed #ccc;'>");
                 }
                 cronograma.append("</body></html>");
-                return tieneActividades ? cronograma.toString() : "<html><body>❌ Sin actividades en este evento.</body></html>";
+                return tieneActividades ? cronograma.toString() : "<html><body> Sin actividades en este evento.</body></html>";
             }
         } catch (SQLException e) {
-            return "<html><body>❌ Error técnico al consultar cronograma.</body></html>";
+            return "<html><body> Error técnico al consultar cronograma.</body></html>";
         }
     }
 
@@ -103,7 +103,7 @@ public class ActividadController {
             }
 
             if (idActividad == 0 || idUsuario == 0) {
-                JOptionPane.showMessageDialog(null, "❌ El DNI no corresponde a un invitado autorizado.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "El DNI no corresponde a un invitado autorizado.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
 
@@ -112,7 +112,7 @@ public class ActividadController {
                 ps.setInt(2, idUsuario);
                 ps.executeUpdate();
             }
-            JOptionPane.showMessageDialog(null, "✅ Asistencia registrada con éxito.");
+            JOptionPane.showMessageDialog(null, "Asistencia registrada con éxito.");
             return true;
         } catch (SQLException e) {
             return false;

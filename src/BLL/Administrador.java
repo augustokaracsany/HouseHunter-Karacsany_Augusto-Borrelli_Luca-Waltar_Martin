@@ -32,10 +32,10 @@ public class Administrador extends Persona {
                           + "<hr>Seleccione un área de gestión:</body></html>";
 
         String[] modulos = {
-            "🏨 RECEPCIÓN", 
-            "🎮 ACTIVIDADES", 
-            "📊 REPORTES", 
-            "❌ CERRAR SESIÓN"
+            " RECEPCIÓN", 
+            " ACTIVIDADES", 
+            " REPORTES", 
+            " CERRAR SESIÓN"
         };
 
         int seleccion;
@@ -108,7 +108,7 @@ public class Administrador extends Persona {
             String[] actividades = ActividadController.getInstance().obtenerNombresActividades(codEvento.trim());
             
             if (actividades.length == 0) {
-                JOptionPane.showMessageDialog(null, "❌ No hay actividades cargadas o el evento no existe.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, " No hay actividades cargadas o el evento no existe.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
@@ -180,9 +180,9 @@ public class Administrador extends Persona {
                         // Cambiado a EventoController para chequear listas previas
                         boolean autorizado = EventoController.getInstance().validarInvitadoPrevia(codEvento.trim(), dniInvitado.trim());
                         if (autorizado) {
-                            JOptionPane.showMessageDialog(null, "✅ El invitado con DNI " + dniInvitado + " se encuentra AUTORIZADO en la lista previa.", "Verificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, " El invitado con DNI " + dniInvitado + " se encuentra AUTORIZADO en la lista previa.", "Verificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(null, "❌ El invitado NO figura en la lista previa de este evento o el código es incorrecto.", "Verificación Fallida", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, " El invitado NO figura en la lista previa de este evento o el código es incorrecto.", "Verificación Fallida", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }

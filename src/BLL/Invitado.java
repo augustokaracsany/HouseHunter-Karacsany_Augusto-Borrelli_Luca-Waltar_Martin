@@ -72,7 +72,7 @@ public class Invitado extends Persona {
         if (reserva == null) {
             String token = JOptionPane.showInputDialog(null, 
                 "Para acceder a su evento, ingrese el token que recibió por correo:\n(Ej: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)", 
-                "Validación de acceso (CU23)", JOptionPane.QUESTION_MESSAGE);
+                "Validación de acceso", JOptionPane.QUESTION_MESSAGE);
             if (token == null || token.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Acceso denegado. No se proporcionó token.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -86,27 +86,27 @@ public class Invitado extends Persona {
             this.reserva = invitadoValidado.getReserva();
             this.tokenAcceso = invitadoValidado.getTokenAcceso();
             this.asistenciaConfirmada = invitadoValidado.isAsistenciaConfirmada();
-            JOptionPane.showMessageDialog(null, "✅ Acceso concedido. Bienvenido al evento: " + reserva.getFechaEvento());
+            JOptionPane.showMessageDialog(null, " Acceso concedido. Bienvenido al evento: " + reserva.getFechaEvento());
         }
 
         // Menú principal
         ImageIcon iconoInvitado = new ImageIcon("src/img/HouseHunter_Menu-Invitado.png");
         String tituloHtml = "<html><body style='width: 350px; text-align: center;'>"
-                          + "<h2>🎟️ Panel del Invitado</h2>"
+                          + "<h2> Panel del Invitado</h2>"
                           + "<b>Hola, " + getNombre() + "</b><br>"
                           + "Evento: " + reserva.getFechaEvento() + "<br>"
-                          + "Estado asistencia: " + (asistenciaConfirmada ? "✔️ Confirmada" : "⏳ Pendiente")
+                          + "Estado asistencia: " + (asistenciaConfirmada ? " Confirmada" : " Pendiente")
                           + "<hr>Seleccione una opción:</body></html>";
 
         String[] opciones = {
-            "📅 Ver cronograma completo (CU24)",
-            "✅ Confirmar mi asistencia (CU25)",
-            "🎯 Explorar actividades (CU26)",
-            "🔍 Ver detalle de una actividad (CU27)",
-            "🛏️ Consultar mi habitación (CU28)",
-            "🎁 Participar en sorteos / Premios (CU29)",
-            "🎫 Obtener voucher (CU31)",
-            "❌ Cerrar sesión"
+            " Ver cronograma completo",
+            " Confirmar mi asistencia",
+            " Explorar actividades",
+            " Ver detalle de una actividad",
+            " Consultar mi habitación",
+            " Participar en sorteos / Premios",
+            " Obtener voucher",
+            " Cerrar sesión"
         };
 
         int seleccion;
@@ -138,18 +138,18 @@ public class Invitado extends Persona {
             JOptionPane.showMessageDialog(null, "No hay actividades programadas para este evento aún.", "Cronograma", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        StringBuilder sb = new StringBuilder("📅 CRONOGRAMA DEL EVENTO\n\n");
+        StringBuilder sb = new StringBuilder(" CRONOGRAMA DEL EVENTO\n\n");
         for (Actividad a : actividades) {
             sb.append("🔹 ").append(a.getNombre())
-              .append("\n    📅 Fecha: ").append(a.getFechaHora().toLocalDate())
-              .append(" ⏰ Hora: ").append(a.getFechaHora().toLocalTime())
-              .append("\n    ⏱️ Duración: ").append(a.getDuracionMinutos()).append(" min")
-              .append("\n    🎯 Categoría: ").append(a.getCategoria())
-              .append("\n    ⭐ Importancia: ").append(a.getImportancia())
-              .append("\n    👥 Cupo máx.: ").append(a.getCupoMaximo())
+              .append("\n     Fecha: ").append(a.getFechaHora().toLocalDate())
+              .append("  Hora: ").append(a.getFechaHora().toLocalTime())
+              .append("\n     Duración: ").append(a.getDuracionMinutos()).append(" min")
+              .append("\n     Categoría: ").append(a.getCategoria())
+              .append("\n     Importancia: ").append(a.getImportancia())
+              .append("\n     Cupo máx.: ").append(a.getCupoMaximo())
               .append("\n\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString(), "Cronograma - CU24", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, sb.toString(), "Cronograma", JOptionPane.PLAIN_MESSAGE);
     }
 
     // CU25: Confirmar asistencia
@@ -160,12 +160,12 @@ public class Invitado extends Persona {
         }
         int opcion = JOptionPane.showConfirmDialog(null, 
             "¿Confirmas tu asistencia al evento del día " + reserva.getFechaEvento() + "?\nEsta acción no se puede deshacer.", 
-            "Confirmar asistencia - CU25", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            "Confirmar asistencia", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (opcion == JOptionPane.YES_OPTION) {
             boolean ok = invitadoController.confirmarAsistencia(this.id);
             if (ok) {
                 this.asistenciaConfirmada = true;
-                JOptionPane.showMessageDialog(null, "¡Gracias! Tu asistencia ha sido registrada. ✅");
+                JOptionPane.showMessageDialog(null, "¡Gracias! Tu asistencia ha sido registrada. ");
             } else {
                 JOptionPane.showMessageDialog(null, "Error al confirmar asistencia. Intente más tarde.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -177,12 +177,12 @@ public class Invitado extends Persona {
         if (reserva == null) { mostrarErrorSinReserva(); return; }
         List<Actividad> actividades = eventoController.obtenerActividadesPorReserva(reserva.getId());
         if (actividades.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay actividades cargadas.", "Actividades - CU26", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No hay actividades cargadas.", "Actividades", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         String[] nombres = actividades.stream().map(Actividad::getNombre).toArray(String[]::new);
-        JOptionPane.showOptionDialog(null, "Seleccione una actividad para ver más detalles (CU27):", 
-                "Lista de actividades - CU26", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+        JOptionPane.showOptionDialog(null, "Seleccione una actividad para ver más detalles:", 
+                "Lista de actividades", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, nombres, nombres[0]);
     }
 
@@ -201,7 +201,7 @@ public class Invitado extends Persona {
         if (idx >= 0) {
             Actividad a = actividades.get(idx);
             String detalle = String.format(
-                "📌 NOMBRE: %s\n\n📝 Descripción: %s\n\n⏰ Fecha y hora: %s\n⏱️ Duración: %d min\n👥 Cupo máximo: %d\n🏷️ Categoría: %s\n⭐ Importancia: %s",
+                " NOMBRE: %s\n\n Descripción: %s\n\n Fecha y hora: %s\n Duración: %d min\n Cupo máximo: %d\n Categoría: %s\n Importancia: %s",
                 a.getNombre(),
                 a.getDescripcion() != null ? a.getDescripcion() : "(Sin descripción)",
                 a.getFechaHora(),
@@ -210,7 +210,7 @@ public class Invitado extends Persona {
                 a.getCategoria(),
                 a.getImportancia()
             );
-            JOptionPane.showMessageDialog(null, detalle, "Detalle completo - CU27", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, detalle, "Detalle completo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -221,9 +221,9 @@ public class Invitado extends Persona {
             JOptionPane.showMessageDialog(null, "Aún no se le ha asignado una habitación. Consulte con recepción.", 
                     "Habitación - CU28", JOptionPane.WARNING_MESSAGE);
         } else {
-            String info = String.format("🏨 Su habitación asignada:\n\nNúmero: %s\nTipo: %s\nCapacidad: %d personas",
+            String info = String.format(" Su habitación asignada:\n\nNúmero: %s\nTipo: %s\nCapacidad: %d personas",
                     hab.getNumero(), hab.getTipo(), hab.getCapacidad());
-            JOptionPane.showMessageDialog(null, info, "Mi habitación - CU28", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, info, "Mi habitación", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -247,7 +247,7 @@ public class Invitado extends Persona {
             Premio p = premios.get(sel);
             boolean exito = premioController.participarEnSorteo(this.id, p.getId());
             if (exito) {
-                JOptionPane.showMessageDialog(null, "¡Has participado correctamente!\nSe verificará tu elegibilidad (CU30) y si resultas ganador podrás obtener un voucher (CU31).", 
+                JOptionPane.showMessageDialog(null, "¡Has participado correctamente!\nSe verificará tu elegibilidad y si resultas ganador podrás obtener un voucher.", 
                         "Participación registrada", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo registrar la participación. Quizás ya participaste en este premio.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -39,13 +39,13 @@ public class UsuariosController extends UsuariosRepository {
                         }
                         
                         usuario.setId(rs.getInt("id"));
-                        System.out.println("ℹ️ Hashing: Login exitoso para el usuario: " + mail);
+                        System.out.println("Hashing: Login exitoso para el usuario: " + mail);
                         
                     } else {
-                        System.out.println("❌ Hashing: Contraseña incorrecta para el usuario: " + email);
+                        System.out.println("Hashing: Contraseña incorrecta para el usuario: " + email);
                     }
                 } else {
-                    System.out.println("❌ Hashing: No se encontró ningún usuario con el email: " + email);
+                    System.out.println("Hashing: No se encontró ningún usuario con el email: " + email);
                 }
             }
         } catch (SQLException e) {
@@ -141,7 +141,7 @@ public class UsuariosController extends UsuariosRepository {
                 }
                 
                 con.commit();
-                System.out.println("ℹ️ Hashing/SQL: Usuario registrado con éxito: " + email);
+                System.out.println("Hashing/SQL: Usuario registrado con éxito: " + email);
                 return true;
                 
             } catch (SQLException e) {

@@ -40,16 +40,16 @@ public class Empresa extends Persona {
         ImageIcon iconoMenu = new ImageIcon("src/img/HouseHunter_Menu-Empresa.png");
         
         String tituloMenu = "<html><body style='width: 300px; text-align: center;'>"
-                          + "<h2>🏢 Panel de Empresa</h2>"
+                          + "<h2>Panel de Empresa</h2>"
                           + "<b>Entidad:</b> " + getNombre() 
                           + "<hr>Seleccione un módulo de gestión:</body></html>";
 
         String[] modulos = {
-            "📁 GESTIÓN DE EVENTO", 
-            "📅 PLANIFICACIÓN", 
-            "📧 INVITACIONES", 
-            "📊 REPORTES", 
-            "❌ CERRAR SESIÓN"
+            " GESTIÓN DE EVENTO", 
+            " PLANIFICACIÓN", 
+            " INVITACIONES", 
+            " REPORTES", 
+            " CERRAR SESIÓN"
         };
 
         int seleccion;
@@ -103,9 +103,9 @@ public class Empresa extends Persona {
                 Reserva nueva = new Reserva(this, fechaEvento, numInvitados);
                 eventoController.crearReserva(nueva);
                 reservaActual = nueva;
-                JOptionPane.showMessageDialog(null, "✅ Reserva creada exitosamente.\nID: " + nueva.getId());
+                JOptionPane.showMessageDialog(null, " Reserva creada exitosamente.\nID: " + nueva.getId());
             } else {
-                JOptionPane.showMessageDialog(null, "❌ No hay disponibilidad para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, " No hay disponibilidad para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Datos inválidos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -156,7 +156,7 @@ public class Empresa extends Persona {
         }
 
         if (invitadoController.cargarInvitados(reservaActual.getId(), lista)) {
-            JOptionPane.showMessageDialog(null, "✅ Se cargaron " + lista.size() + " invitados.\n❌ " + errores + " registros inválidos.");
+            JOptionPane.showMessageDialog(null, " Se cargaron " + lista.size() + " invitados.\n❌ " + errores + " registros inválidos.");
         } else {
             JOptionPane.showMessageDialog(null, "Error al guardar los invitados.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -302,7 +302,7 @@ public class Empresa extends Persona {
             JOptionPane.showMessageDialog(null, "No hay invitados cargados.");
             return;
         }
-        StringBuilder sb = new StringBuilder("📋 Invitados:\n");
+        StringBuilder sb = new StringBuilder(" Invitados:\n");
         for (Invitado i : invitados) {
             sb.append("- ").append(i.getNombre())
               .append(" | Email: ").append(i.getEmail())
@@ -314,7 +314,7 @@ public class Empresa extends Persona {
 
     private void enviarNotificaciones() {
         if (invitadoController.enviarNotificaciones(reservaActual.getId())) {
-            JOptionPane.showMessageDialog(null, "✅ Notificaciones enviadas (simulado).\nRevise la consola para ver los tokens.");
+            JOptionPane.showMessageDialog(null, " Notificaciones enviadas (simulado).\nRevise la consola para ver los tokens.");
         } else {
             JOptionPane.showMessageDialog(null, "Error al enviar notificaciones.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -341,7 +341,7 @@ public class Empresa extends Persona {
     private void mostrarEstadisticas() {
         Map<String, Object> stats = reporteController.obtenerReporteEvento(reservaActual.getId());
         String mensaje = String.format(
-            "📊 REPORTE DEL EVENTO ID %d\n\n" +
+            " REPORTE DEL EVENTO ID %d\n\n" +
             "Total invitados: %d\n" +
             "Confirmados: %d\n" +
             "Porcentaje confirmación: %.2f%%\n" +

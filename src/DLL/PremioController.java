@@ -53,7 +53,7 @@ public class PremioController {
             }
 
             if (idUsuarioGanador == 0) {
-                JOptionPane.showMessageDialog(null, "❌ No hay asistentes confirmados para este sorteo.", "Sorteo Vacío", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No hay asistentes confirmados para este sorteo.", "Sorteo Vacío", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
 
@@ -65,7 +65,7 @@ public class PremioController {
             }
 
             String mensajeExito = "<html><body style='width: 250px; text-align: center;'>"
-                                + "<h2 style='color: #2ecc71;'>🎉 ¡Tenemos Ganador! 🎉</h2>"
+                                + "<h2 style='color: #2ecc71;'> ¡Tenemos Ganador! </h2>"
                                 + "<p><b>Invitado:</b> " + nombreCompleto + "</p>"
                                 + "<p><b>DNI:</b> " + dniGanador + "</p><hr>"
                                 + "<p><b>Premio:</b><br>" + descripcionPremio + "</p></body></html>";
