@@ -209,7 +209,12 @@ public class Empresa extends Persona {
         } while (op != 3 && op != -1);
     }
 
+<<<<<<< Updated upstream
     // CU10
+=======
+ // ====================== PLANIFICACIÓN (CRONOGRAMA) ======================
+
+>>>>>>> Stashed changes
     private void crearActividad() {
         String nombre = JOptionPane.showInputDialog("Nombre de la actividad:");
         if (nombre == null) return;
@@ -233,9 +238,13 @@ public class Empresa extends Persona {
             int cupo = Integer.parseInt(cupoStr);
             Actividad act = new Actividad(nombre, fechaHora, duracion, cupo, Importancia.valueOf(importanciaStr), categoria);
             act.setReserva(reservaActual);
-            List<Actividad> lista = new ArrayList<>();
-            lista.add(act);
-            if (eventoController.guardarCronograma(reservaActual.getId(), lista)) {
+            
+            // Obtener actividades existentes
+            List<Actividad> actividadesExistentes = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
+            actividadesExistentes.add(act);
+            
+            // Guardar la lista completa (reemplaza todas, pero ahora incluye la nueva)
+            if (eventoController.guardarCronograma(reservaActual.getId(), actividadesExistentes)) {
                 JOptionPane.showMessageDialog(null, "Actividad agregada al cronograma.");
             } else {
                 JOptionPane.showMessageDialog(null, "Error al guardar actividad.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -261,10 +270,19 @@ public class Empresa extends Persona {
                 JOptionPane.QUESTION_MESSAGE, null, new String[]{"BAJA","MEDIA","ALTA"}, act.getImportancia().toString());
         if (nuevaImp != null) {
             act.setImportancia(Importancia.valueOf(nuevaImp));
+<<<<<<< Updated upstream
             // Actualizar en BD (reescribir la actividad). Simplificado: guardamos todo el cronograma de nuevo.
+=======
+            // Actualizar la actividad en la BD. Una forma eficiente es actualizar solo esa actividad.
+            // Podemos implementar un método en EventoController para actualizar una actividad.
+            // Pero como simplificación, guardamos todas otra vez.
+>>>>>>> Stashed changes
             List<Actividad> todas = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
             for (Actividad a : todas) {
-                if (a.getId() == act.getId()) a.setImportancia(act.getImportancia());
+                if (a.getId() == act.getId()) {
+                    a.setImportancia(act.getImportancia());
+                    break;
+                }
             }
             if (eventoController.guardarCronograma(reservaActual.getId(), todas)) {
                 JOptionPane.showMessageDialog(null, "Importancia actualizada.");
