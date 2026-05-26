@@ -41,16 +41,16 @@ public class Empresa extends Persona {
         ImageIcon iconoMenu = new ImageIcon("src/img/HouseHunter_Menu-Empresa.png");
         
         String tituloMenu = "<html><body style='width: 300px; text-align: center;'>"
-                          + "<h2>🏢 Panel de Empresa</h2>"
+                          + "<h2>Panel de Empresa</h2>"
                           + "<b>Entidad:</b> " + getNombre() 
                           + "<hr>Seleccione un módulo de gestión:</body></html>";
 
         String[] modulos = {
-            "📁 GESTIÓN DE EVENTO", 
-            "📅 PLANIFICACIÓN", 
-            "📧 INVITACIONES", 
-            "📊 REPORTES", 
-            "❌ CERRAR SESIÓN"
+            " GESTIÓN DE EVENTO", 
+            " PLANIFICACIÓN", 
+            " INVITACIONES", 
+            " REPORTES", 
+            " CERRAR SESIÓN"
         };
 
         int seleccion;
@@ -105,9 +105,9 @@ public class Empresa extends Persona {
                 Reserva nueva = new Reserva(this, fechaEvento, numInvitados);
                 eventoController.crearReserva(nueva);
                 reservaActual = nueva;
-                JOptionPane.showMessageDialog(null, "✅ Reserva creada exitosamente.\nID: " + nueva.getId());
+                JOptionPane.showMessageDialog(null, " Reserva creada exitosamente.\nID: " + nueva.getId());
             } else {
-                JOptionPane.showMessageDialog(null, "❌ No hay disponibilidad para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, " No hay disponibilidad para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Datos inválidos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,7 +159,7 @@ public class Empresa extends Persona {
         }
 
         if (invitadoController.cargarInvitados(reservaActual.getId(), lista)) {
-            JOptionPane.showMessageDialog(null, "✅ Se cargaron " + lista.size() + " invitados.\n❌ " + errores + " registros inválidos.");
+            JOptionPane.showMessageDialog(null, " Se cargaron " + lista.size() + " invitados.\n " + errores + " registros inválidos.");
         } else {
             JOptionPane.showMessageDialog(null, "Error al guardar los invitados.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -209,12 +209,10 @@ public class Empresa extends Persona {
         } while (op != 3 && op != -1);
     }
 
-<<<<<<< Updated upstream
-    // CU10
-=======
+
  // ====================== PLANIFICACIÓN (CRONOGRAMA) ======================
 
->>>>>>> Stashed changes
+
     private void crearActividad() {
         String nombre = JOptionPane.showInputDialog("Nombre de la actividad:");
         if (nombre == null) return;
@@ -270,13 +268,6 @@ public class Empresa extends Persona {
                 JOptionPane.QUESTION_MESSAGE, null, new String[]{"BAJA","MEDIA","ALTA"}, act.getImportancia().toString());
         if (nuevaImp != null) {
             act.setImportancia(Importancia.valueOf(nuevaImp));
-<<<<<<< Updated upstream
-            // Actualizar en BD (reescribir la actividad). Simplificado: guardamos todo el cronograma de nuevo.
-=======
-            // Actualizar la actividad en la BD. Una forma eficiente es actualizar solo esa actividad.
-            // Podemos implementar un método en EventoController para actualizar una actividad.
-            // Pero como simplificación, guardamos todas otra vez.
->>>>>>> Stashed changes
             List<Actividad> todas = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
             for (Actividad a : todas) {
                 if (a.getId() == act.getId()) {
@@ -330,7 +321,7 @@ public class Empresa extends Persona {
             JOptionPane.showMessageDialog(null, "No hay invitados cargados.");
             return;
         }
-        StringBuilder sb = new StringBuilder("📋 Invitados:\n");
+        StringBuilder sb = new StringBuilder(" Invitados:\n");
         for (Invitado i : invitados) {
             sb.append("- ").append(i.getNombre())
               .append(" | Email: ").append(i.getEmail())
@@ -343,35 +334,99 @@ public class Empresa extends Persona {
     // CU08
     private void enviarNotificaciones() {
         if (invitadoController.enviarNotificaciones(reservaActual.getId())) {
-            JOptionPane.showMessageDialog(null, "✅ Notificaciones enviadas (simulado).\nRevise la consola para ver los tokens.");
+            JOptionPane.showMessageDialog(null, " Notificaciones enviadas (simulado).\nRevise la consola para ver los tokens.");
         } else {
             JOptionPane.showMessageDialog(null, "Error al enviar notificaciones.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     // ====================== REPORTES ======================
-    private void subMenuReportes() {
-        if (!seleccionarReservaActual()) return;
+    	private void subMenuReportes() {
+    	    if (!seleccionarReservaActual()) return;
+    	    ImageIcon iconoReportes = new ImageIcon("src/img/HouseHunter_Menu-Empresa_Reportes.png");
+    	    String[] sub = {"Ver estadísticas generales", "Ver reporte por actividad", "Filtrar asistencia/desempeño", "Exportar reporte completo", "Volver"};
+    	    int op;
+    	    do {
+    	        op = JOptionPane.showOptionDialog(
+    	            null, "<html><body style='width:250px; text-align:center;'><h3>Reportes Corporativos</h3></body></html>", 
+    	            "Reportes", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, 
+    	            iconoReportes, sub, sub[0]
+    	        );
+    	        switch (op) {
+    	            case 0: mostrarEstadisticas(); break;
+    	            case 1: reportePorActividad(); break;
+    	            case 2: filtrarReporte(); break;
+    	            case 3: exportarReporte(); break;
+    	        }
+    	    } while (op != 4 && op != -1);
+    	}
 
-        ImageIcon iconoReportes = new ImageIcon("src/img/HouseHunter_Menu-Empresa_Reportes.png");
-        String[] sub = {"Ver estadísticas", "Exportar (simular)", "Volver"};
-        int op = JOptionPane.showOptionDialog(
-            null, "<html><body style='width:250px; text-align:center;'><h3>Reportes Corporativos</h3></body></html>", 
-            "Reportes", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, 
-            iconoReportes, sub, sub[0]
-        );
-        if (op == 0) {
-            mostrarEstadisticas();
-        } else if (op == 1) {
-            JOptionPane.showMessageDialog(null, "Exportación a PDF/Excel (simulada).");
-        }
-    }
+    	private void reportePorActividad() {
+    	    List<Actividad> actividades = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
+    	    if (actividades.isEmpty()) {
+    	        JOptionPane.showMessageDialog(null, "No hay actividades para esta reserva.");
+    	        return;
+    	    }
+    	    String[] nombres = actividades.stream().map(Actividad::getNombre).toArray(String[]::new);
+    	    int sel = JOptionPane.showOptionDialog(null, "Seleccione actividad:", "Reporte por actividad",
+    	            JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, nombres, nombres[0]);
+    	    if (sel >= 0) {
+    	        Actividad a = actividades.get(sel);
+    	        Map<String, Object> rep = reporteController.obtenerReporteActividad(a.getId());
+    	        StringBuilder msg = new StringBuilder();
+    	        msg.append("📊 REPORTE DE ACTIVIDAD: ").append(rep.get("nombre")).append("\n\n");
+    	        msg.append("Descripción: ").append(rep.get("descripcion")).append("\n");
+    	        msg.append("Fecha/Hora: ").append(rep.get("fecha_hora")).append("\n");
+    	        msg.append("Duración: ").append(rep.get("duracion")).append(" min\n");
+    	        msg.append("Cupo máximo: ").append(rep.get("cupo_maximo")).append("\n");
+    	        msg.append("Asistentes registrados: ").append(rep.get("total_asistentes")).append("\n\n");
+    	        msg.append("Lista de asistentes:\n");
+    	        List<String> asistentes = (List<String>) rep.get("lista_asistentes");
+    	        if (asistentes.isEmpty()) msg.append("  (ninguno)\n");
+    	        else asistentes.forEach(n -> msg.append("  - ").append(n).append("\n"));
+    	        JOptionPane.showMessageDialog(null, msg.toString());
+    	    }
+    	}
+
+    	private void filtrarReporte() {
+    	    String[] filtros = {"Asistencia (confirmados)", "Desempeño (actividades con más asistentes)"};
+    	    int sel = JOptionPane.showOptionDialog(null, "Filtrar por:", "Filtros",
+    	            JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, filtros, filtros[0]);
+    	    if (sel == 0) {
+    	        // Mostrar solo confirmados
+    	        List<Invitado> invitados = invitadoController.listarInvitadosPorReserva(reservaActual.getId());
+    	        long confirmados = invitados.stream().filter(Invitado::isAsistenciaConfirmada).count();
+    	        JOptionPane.showMessageDialog(null, "Invitados confirmados: " + confirmados + " de " + invitados.size());
+    	    } else if (sel == 1) {
+    	        List<Actividad> acts = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
+    	        StringBuilder sb = new StringBuilder("🏆 Actividades con mayor asistencia:\n");
+    	        acts.stream()
+    	            .map(a -> {
+    	                Map<String, Object> rep = reporteController.obtenerReporteActividad(a.getId());
+    	                return new Object[]{a.getNombre(), rep.get("total_asistentes")};
+    	            })
+    	            .sorted((x, y) -> Integer.compare((int)y[1], (int)x[1]))
+    	            .limit(3)
+    	            .forEach(obj -> sb.append("- ").append(obj[0]).append(": ").append(obj[1]).append(" asistentes\n"));
+    	        JOptionPane.showMessageDialog(null, sb.toString());
+    	    }
+    	}
+
+    	private void exportarReporte() {
+    	    String ruta = JOptionPane.showInputDialog("Ingrese la ruta y nombre del archivo (ej. C:/reporte_evento.txt):");
+    	    if (ruta != null && !ruta.trim().isEmpty()) {
+    	        boolean ok = reporteController.exportarReporteEvento(reservaActual.getId(), ruta);
+    	        if (ok) JOptionPane.showMessageDialog(null, "Reporte exportado exitosamente a " + ruta);
+    	        else JOptionPane.showMessageDialog(null, "Error al exportar el reporte.", "Error", JOptionPane.ERROR_MESSAGE);
+    	    }
+    	}
+    
 
     // CU13
     private void mostrarEstadisticas() {
         Map<String, Object> stats = reporteController.obtenerReporteEvento(reservaActual.getId());
         String mensaje = String.format(
-            "📊 REPORTE DEL EVENTO ID %d\n\n" +
+            " REPORTE DEL EVENTO ID %d\n\n" +
             "Total invitados: %d\n" +
             "Confirmados: %d\n" +
             "Porcentaje confirmación: %.2f%%\n" +

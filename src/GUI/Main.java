@@ -16,11 +16,11 @@ public class Main {
         ImageIcon iconoBienvenida = new ImageIcon("src/img/HouseHunter_Menu-Principal.gif");
 
         String textoHtml = "<html><body style='width: 300px; text-align: center;'>"
-                         + "<h2>🏠 Sistema HouseHunter v1.0</h2>"
+                         + "<h2> Sistema HouseHunter v1.0</h2>"
                          + "Bienvenido al gestor de accesos hoteleros corporativos.<br>"
                          + "<hr>Seleccione una opción para continuar:</body></html>";
 
-        String[] opcionesInicio = {"🔐 INICIAR SESIÓN", "📝 REGISTRARSE", "❌ SALIR"};
+        String[] opcionesInicio = {" INICIAR SESIÓN", " REGISTRARSE", " SALIR"};
 
         int menuPrincipal;
         do {
