@@ -26,30 +26,57 @@ import java.util.List;
 		    return true;
 		}
 
-	    // Crear nueva reserva (CU04)
-	    public Reserva crearReserva(Reserva reserva) throws SQLException {
-	        String sql = "INSERT INTO reservas (id_empresa, fecha_evento, num_invitados, estado, id_plantilla) VALUES (?, ?, ?, ?, ?)";
+		public Reserva crearReserva(Reserva reserva) throws SQLException {
+		    String sql = "INSERT INTO reservas (id_empresa, fecha_evento, num_invitados, estado, id_plantilla) VALUES (?, ?, ?, ?, ?)";
+		    Connection con = ConexionController.getInstance().getConnection();
+		    try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+		        ps.setInt(1, reserva.getEmpresa().getId());
+		        ps.setDate(2, Date.valueOf(reserva.getFechaEvento()));
+		        ps.setInt(3, reserva.getNumInvitados());
+		        ps.setString(4, reserva.getEstado());
+		        if (reserva.getPlantilla() != null)
+		            ps.setInt(5, reserva.getPlantilla().getId());
+		        else
+		            ps.setNull(5, Types.INTEGER);
+		        
+		        int affected = ps.executeUpdate();
+		        if (affected == 0) throw new SQLException("No se pudo crear la reserva");
+		        
+		        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+		            if (generatedKeys.next()) {
+		                reserva.setId(generatedKeys.getInt(1));
+		            }
+		        }
+		    }
+		    // Generar habitaciones según el número de invitados
+		    generarHabitacionesParaReserva(reserva.getId(), reserva.getNumInvitados());
+		    return reserva;
+		}
+	    
+	 // Después de crearReserva, genera las habitaciones automáticamente
+	    public boolean generarHabitacionesParaReserva(int idReserva, int numHabitaciones) {
+	        String sql = "INSERT INTO habitaciones (numero, id_reserva, estado) VALUES (?, ?, 'LIBRE')";
 	        Connection con = ConexionController.getInstance().getConnection();
-	        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-	            ps.setInt(1, reserva.getEmpresa().getId());
-	            ps.setDate(2, Date.valueOf(reserva.getFechaEvento()));
-	            ps.setInt(3, reserva.getNumInvitados());
-	            ps.setString(4, reserva.getEstado());
-	            if (reserva.getPlantilla() != null)
-	                ps.setInt(5, reserva.getPlantilla().getId());
-	            else
-	                ps.setNull(5, Types.INTEGER);
-	            
-	            int affected = ps.executeUpdate();
-	            if (affected == 0) throw new SQLException("No se pudo crear la reserva");
-	            
-	            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-	                if (generatedKeys.next()) {
-	                    reserva.setId(generatedKeys.getInt(1));
+	        try {
+	            con.setAutoCommit(false);
+	            try (PreparedStatement ps = con.prepareStatement(sql)) {
+	                for (int i = 1; i <= numHabitaciones; i++) {
+	                    String numero = String.format("%03d", i); // Ej: 001, 002, ...
+	                    ps.setString(1, numero);
+	                    ps.setInt(2, idReserva);
+	                    ps.addBatch();
 	                }
+	                ps.executeBatch();
 	            }
+	            con.commit();
+	            return true;
+	        } catch (SQLException e) {
+	            try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+	            e.printStackTrace();
+	            return false;
+	        } finally {
+	            try { con.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
 	        }
-	        return reserva;
 	    }
 
 	    // Obtener reservas de una empresa
