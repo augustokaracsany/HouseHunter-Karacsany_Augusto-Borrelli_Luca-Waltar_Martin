@@ -7,40 +7,41 @@ package DLL;
 
 	public class RegistroController {
 
-	    // CU23 - Validar token y obtener el invitado asociado
-	    public Invitado validarToken(String token) {
-	        String sql = "SELECT i.id, i.email, i.nombre, i.telefono, i.token_acceso, i.asistencia_confirmada,\r\n"
-	        		+ "       r.id as reserva_id, r.fecha_evento, r.estado as reserva_estado" +
-	                     "FROM invitados i JOIN reservas r ON i.id_reserva = r.id" +
-	                     "JOIN reservas r ON i.id_reserva = r.id " +
-	                     "WHERE i.token_acceso = ? AND r.estado != 'CANCELADA''";
-	        try (Connection con = ConexionController.getInstance().getConnection();
-	             PreparedStatement ps = con.prepareStatement(sql)) {
-	            ps.setString(1, token);
-	            ResultSet rs = ps.executeQuery();
-	            if (rs.next()) {
-	                Invitado inv = new Invitado(
-	                    rs.getInt("id"),
-	                    rs.getString("email"),
-	                    rs.getString("nombre"),
-	                    "", // apellido no está en esta tabla, se podría agregar después
-	                    rs.getString("telefono"),
-	                    rs.getString("token_acceso"),
-	                    rs.getBoolean("asistencia_confirmada")
-	                );
-	                // Cargar datos de reserva (para saber a qué evento pertenece)
-	                Reserva r = new Reserva();
-	                r.setId(rs.getInt("reserva_id"));
-	                r.setFechaEvento(rs.getDate("fecha_evento").toLocalDate());
-	                inv.setReserva(r);
-	                return inv;
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
-
+		// CU23 - Validar token y obtener el invitado asociado
+		public Invitado validarToken(String token) {
+		    String sql = "SELECT i.id, i.email, i.nombre, i.dni, i.telefono, i.token_acceso, i.asistencia_confirmada, " +
+		                 "r.id as reserva_id, r.fecha_evento, r.estado as reserva_estado " +
+		                 "FROM invitados i " +
+		                 "JOIN reservas r ON i.id_reserva = r.id " +
+		                 "WHERE i.token_acceso = ? AND r.estado != 'CANCELADA'";
+		    
+		    try (Connection con = ConexionController.getInstance().getConnection();
+		         PreparedStatement ps = con.prepareStatement(sql)) {
+		        ps.setString(1, token);
+		        ResultSet rs = ps.executeQuery();
+		        if (rs.next()) {
+		            Invitado inv = new Invitado(
+		                rs.getInt("id"),
+		                rs.getString("email"),
+		                rs.getString("nombre"),
+		                "", // apellido
+		                rs.getString("dni"),
+		                rs.getString("telefono"),
+		                rs.getString("token_acceso"),
+		                rs.getBoolean("asistencia_confirmada")
+		            );
+		            // Cargar datos de reserva
+		            Reserva r = new Reserva();
+		            r.setId(rs.getInt("reserva_id"));
+		            r.setFechaEvento(rs.getDate("fecha_evento").toLocalDate());
+		            inv.setReserva(r);
+		            return inv;
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    return null;
+		}
 	    // Obtener cronograma (actividades) de la reserva a la que pertenece el invitado
 	    public List<Actividad> obtenerCronograma(int idReserva) {
 	        return new EventoController().obtenerActividadesPorReserva(idReserva);
