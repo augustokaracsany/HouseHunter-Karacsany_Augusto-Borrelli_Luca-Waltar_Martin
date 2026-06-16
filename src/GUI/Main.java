@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.EmpresaDashboard;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import BLL.Persona;
@@ -7,7 +8,7 @@ import BLL.Rol;
 import Repository.UsuariosController;
 import Repository.UsuariosRepository;
 import java.util.LinkedList;
-
+import BLL.Empresa;
 public class Main {
     public static void main(String[] args) {
         UsuariosRepository repo = new UsuariosController();
@@ -41,9 +42,25 @@ public class Main {
 
                         if (usuario != null) {
                             JOptionPane.showMessageDialog(null, "¡Login exitoso!\nBienvenido " + usuario.getNombre());
-                            usuario.mostrarMenu();
                             
-                            // Log por consola del listado técnico para verificación
+                            // Redirigir según el rol a la interfaz gráfica correspondiente
+                            if (usuario.getRol() == Rol.EMPRESA) {
+                                // Cerrar cualquier ventana de login si existe (opcional)
+                                // Abrir el dashboard de empresa
+                                GUI.EmpresaDashboard dashboard = new GUI.EmpresaDashboard((Empresa) usuario);
+                                dashboard.setVisible(true);
+                                // No llamamos a mostrarMenu() porque ya tenemos la GUI
+                            } 
+                            else if (usuario.getRol() == Rol.INVITADO) {
+                                // Por ahora, conservamos el menú antiguo hasta que crees InvitadoDashboard
+                                usuario.mostrarMenu();
+                            } 
+                            else if (usuario.getRol() == Rol.ADMINISTRADOR) {
+                                // Igual, conservamos el menú antiguo
+                                usuario.mostrarMenu();
+                            }
+                            
+                            // Opcional: el listado de usuarios sigue siendo útil para consola
                             System.out.println("--- LISTA DE USUARIOS EN BASE DE DATOS ---");
                             LinkedList<Persona> todos = repo.listarTodos();
                             for (Persona p : todos) {
