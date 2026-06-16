@@ -1,6 +1,7 @@
 package GUI;
 
 import GUI.EmpresaDashboard;
+import GUI.InvitadoDashboard;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import BLL.Persona;
@@ -9,6 +10,7 @@ import Repository.UsuariosController;
 import Repository.UsuariosRepository;
 import java.util.LinkedList;
 import BLL.Empresa;
+import BLL.Invitado;
 public class Main {
     public static void main(String[] args) {
         UsuariosRepository repo = new UsuariosController();
@@ -52,9 +54,10 @@ public class Main {
                                 // No llamamos a mostrarMenu() porque ya tenemos la GUI
                             } 
                             else if (usuario.getRol() == Rol.INVITADO) {
-                                // Por ahora, conservamos el menú antiguo hasta que crees InvitadoDashboard
-                                usuario.mostrarMenu();
-                            } 
+                                // Abrir el dashboard de invitado
+                                InvitadoDashboard dashboard = new InvitadoDashboard((Invitado) usuario);
+                                dashboard.setVisible(true);
+                            }
                             else if (usuario.getRol() == Rol.ADMINISTRADOR) {
                                 // Igual, conservamos el menú antiguo
                                 usuario.mostrarMenu();
