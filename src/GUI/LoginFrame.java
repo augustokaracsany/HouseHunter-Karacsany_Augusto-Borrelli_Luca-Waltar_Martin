@@ -69,7 +69,7 @@ public class LoginFrame extends JFrame {
         });
 
         btnRegistro.addActionListener(e -> {
-            new RegistroDialog(this).setVisible(true);
+            new RegistroDialog(null).setVisible(true);
         });
 
         btnSalir.addActionListener(new ActionListener() {

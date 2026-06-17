@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-
+import GUI.Main;
 public class InvitadoDashboard extends JFrame {
     private Invitado invitado;
     private Reserva reserva;
