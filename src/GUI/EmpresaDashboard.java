@@ -145,52 +145,11 @@ public class EmpresaDashboard extends JFrame {
     }
     
     private void realizarReserva() {
-        // Crear un JDialog para ingresar datos
-        JDialog dialog = new JDialog(this, "Nueva Reserva", true);
-        dialog.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        JTextField txtFecha = new JTextField(10);
-        JTextField txtInvitados = new JTextField(10);
-        
-        gbc.gridx = 0; gbc.gridy = 0;
-        dialog.add(new JLabel("Fecha (YYYY-MM-DD):"), gbc);
-        gbc.gridx = 1;
-        dialog.add(txtFecha, gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 1;
-        dialog.add(new JLabel("Número de invitados:"), gbc);
-        gbc.gridx = 1;
-        dialog.add(txtInvitados, gbc);
-        
-        JButton btnGuardar = new JButton("Crear Reserva");
-        gbc.gridx = 0; gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        dialog.add(btnGuardar, gbc);
-        
-        btnGuardar.addActionListener(e -> {
-            try {
-                LocalDate fecha = LocalDate.parse(txtFecha.getText());
-                int num = Integer.parseInt(txtInvitados.getText());
-                if (eventoController.verificarDisponibilidad(fecha, num)) {
-                    Reserva nueva = new Reserva(empresa, fecha, num);
-                    eventoController.crearReserva(nueva);
-                    JOptionPane.showMessageDialog(dialog, "Reserva creada con ID: " + nueva.getId());
-                    cargarReservas(); // recargar combo
-                    dialog.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "No hay disponibilidad para esa fecha.");
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
-            }
-        });
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
+        NuevaReservaDialog dialog = new NuevaReservaDialog(this, empresa);
         dialog.setVisible(true);
+        if (dialog.getReservaCreada() != null) {
+            cargarReservas(); // recargar combo de reservas
+        }
     }
     
     private void cargarInvitadosMasivo() {
@@ -310,72 +269,11 @@ public class EmpresaDashboard extends JFrame {
     
     private void nuevaActividad() {
         if (reservaActual == null) return;
-        JDialog dialog = new JDialog(this, "Nueva Actividad", true);
-        dialog.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        JTextField txtNombre = new JTextField(15);
-        JTextField txtFecha = new JTextField(15);
-        JTextField txtDuracion = new JTextField(5);
-        JTextField txtCupo = new JTextField(5);
-        JComboBox<String> comboImportancia = new JComboBox<>(new String[]{"BAJA","MEDIA","ALTA"});
-        JComboBox<CategoriaActividad> comboCategoria = new JComboBox<>(CategoriaActividad.values());
-        
-        int row = 0;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Nombre:"), gbc);
-        gbc.gridx=1; dialog.add(txtNombre, gbc);
-        row++;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Fecha y hora (YYYY-MM-DD HH:MM):"), gbc);
-        gbc.gridx=1; dialog.add(txtFecha, gbc);
-        row++;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Duración (min):"), gbc);
-        gbc.gridx=1; dialog.add(txtDuracion, gbc);
-        row++;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Cupo máximo:"), gbc);
-        gbc.gridx=1; dialog.add(txtCupo, gbc);
-        row++;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Importancia:"), gbc);
-        gbc.gridx=1; dialog.add(comboImportancia, gbc);
-        row++;
-        gbc.gridx=0; gbc.gridy=row; dialog.add(new JLabel("Categoría:"), gbc);
-        gbc.gridx=1; dialog.add(comboCategoria, gbc);
-        row++;
-        
-        JButton btnGuardar = new JButton("Guardar");
-        gbc.gridx=0; gbc.gridy=row; gbc.gridwidth=2;
-        dialog.add(btnGuardar, gbc);
-        
-        btnGuardar.addActionListener(e -> {
-            try {
-                String nombre = txtNombre.getText();
-                String fechaHoraStr = txtFecha.getText();
-                LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraStr.replace(" ", "T"));
-                int duracion = Integer.parseInt(txtDuracion.getText());
-                int cupo = Integer.parseInt(txtCupo.getText());
-                String importancia = (String) comboImportancia.getSelectedItem();
-                String categoria = comboCategoria.getSelectedItem().toString();
-                
-                Actividad act = new Actividad(nombre, fechaHora, duracion, cupo, Importancia.valueOf(importancia), categoria);
-                act.setReserva(reservaActual);
-                List<Actividad> acts = eventoController.obtenerActividadesPorReserva(reservaActual.getId());
-                acts.add(act);
-                if (eventoController.guardarCronograma(reservaActual.getId(), acts)) {
-                    JOptionPane.showMessageDialog(dialog, "Actividad guardada.");
-                    cargarActividades();
-                    dialog.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Error al guardar.");
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
-            }
-        });
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
+        NuevaActividadDialog dialog = new NuevaActividadDialog(this, reservaActual);
         dialog.setVisible(true);
+        if (dialog.isGuardado()) {
+            cargarActividades();
+        }
     }
     
     private void cambiarImportancia() {

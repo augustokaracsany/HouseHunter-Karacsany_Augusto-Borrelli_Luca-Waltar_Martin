@@ -50,16 +50,25 @@ public class LoginFrame extends JFrame {
         JPanel panelBotones = new JPanel(new FlowLayout());
         btnLogin = new JButton("Iniciar Sesión");
         btnRegistro = new JButton("Registrarse");
+     // En LoginFrame.java, dentro de initComponents(), después de agregar btnSalir
+
+        JButton btnToken = new JButton("Ingresar con Token");
+        btnToken.addActionListener(e -> {
+            new TokenLoginDialog(LoginFrame.this).setVisible(true);
+        });
+
+        
         btnSalir = new JButton("Salir");
 
         panelBotones.add(btnLogin);
         panelBotones.add(btnRegistro);
+        panelBotones.add(btnToken);
         panelBotones.add(btnSalir);
 
         gbc.gridx = 0; gbc.gridy = 2;
         gbc.gridwidth = 2;
         add(panelBotones, gbc);
-
+        
         // Eventos
         btnLogin.addActionListener(new ActionListener() {
             @Override
@@ -93,17 +102,14 @@ public class LoginFrame extends JFrame {
 
         Persona usuario = repo.login(email, password);
         if (usuario != null) {
-            // Eliminar el JOptionPane de bienvenida
-            // JOptionPane.showMessageDialog(this, "¡Login exitoso! Bienvenido " + usuario.getNombre());
             this.dispose();
             if (usuario.getRol() == Rol.EMPRESA) {
                 new EmpresaDashboard((Empresa) usuario).setVisible(true);
             } else if (usuario.getRol() == Rol.INVITADO) {
-                // Usar InvitadoDashboard en lugar de mostrarMenu()
                 new InvitadoDashboard((Invitado) usuario).setVisible(true);
             } else if (usuario.getRol() == Rol.ADMINISTRADOR) {
-                // Por ahora, menú antiguo (luego se creará AdminDashboard)
-                usuario.mostrarMenu();
+                // 👇 NUEVO: usar AdminDashboard
+                new AdminDashboard((Administrador) usuario).setVisible(true);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Credenciales inválidas.", "Error", JOptionPane.ERROR_MESSAGE);

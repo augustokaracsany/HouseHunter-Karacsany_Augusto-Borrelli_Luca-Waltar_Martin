@@ -89,7 +89,52 @@ package DLL;
 	            try { con.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
 	        }
 	    }
+	    
+	 // En RegistroController.java
 
+	 // Obtener una habitación libre (pública para el admin)
+	 public Integer obtenerHabitacionLibre(int idReserva) {
+	     String sql = "SELECT id FROM habitaciones WHERE id_reserva = ? AND estado = 'LIBRE' LIMIT 1";
+	     try (Connection con = ConexionController.getInstance().getConnection();
+	          PreparedStatement ps = con.prepareStatement(sql)) {
+	         ps.setInt(1, idReserva);
+	         ResultSet rs = ps.executeQuery();
+	         if (rs.next()) {
+	             return rs.getInt("id");
+	         }
+	     } catch (SQLException e) {
+	         e.printStackTrace();
+	     }
+	     return null;
+	 }
+
+	 // Asignar habitación a un invitado (pública para el admin)
+	 public boolean asignarHabitacionAInvitado(int idInvitado, int idHabitacion, int idReserva) {
+	     String sqlUpdateHabitacion = "UPDATE habitaciones SET estado = 'OCUPADA' WHERE id = ?";
+	     String sqlUpdateInvitado = "UPDATE invitados SET id_habitacion = ? WHERE id = ?";
+	     Connection con = ConexionController.getInstance().getConnection();
+	     try {
+	         con.setAutoCommit(false);
+	         try (PreparedStatement ps1 = con.prepareStatement(sqlUpdateHabitacion)) {
+	             ps1.setInt(1, idHabitacion);
+	             ps1.executeUpdate();
+	         }
+	         try (PreparedStatement ps2 = con.prepareStatement(sqlUpdateInvitado)) {
+	             ps2.setInt(1, idHabitacion);
+	             ps2.setInt(2, idInvitado);
+	             ps2.executeUpdate();
+	         }
+	         con.commit();
+	         return true;
+	     } catch (SQLException e) {
+	         try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+	         e.printStackTrace();
+	         return false;
+	     } finally {
+	         try { con.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
+	     }
+	 }
+	    
 	    // CU25 - Confirmar asistencia del invitado
 	    public boolean confirmarAsistencia(int idInvitado) {
 	        // Primero obtener id_reserva del invitado

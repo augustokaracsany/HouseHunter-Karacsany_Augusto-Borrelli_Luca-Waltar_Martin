@@ -188,6 +188,7 @@ public class InvitadoDashboard extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "❌ Error al confirmar asistencia.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
     }
 
     // ================== PANEL ACTIVIDADES ==================

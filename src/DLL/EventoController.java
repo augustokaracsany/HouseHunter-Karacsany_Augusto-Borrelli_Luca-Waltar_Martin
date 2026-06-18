@@ -172,6 +172,39 @@ import java.util.List;
 	        }
 	        return lista;
 	    }
+	 // En EventoController.java
+	    public List<Reserva> listarTodasReservas() {
+	        List<Reserva> reservas = new ArrayList<>();
+	        String sql = "SELECT r.*, p.nombre as plantilla_nombre, u.email as empresa_email " +
+	                     "FROM reservas r " +
+	                     "LEFT JOIN plantillas p ON r.id_plantilla = p.id " +
+	                     "LEFT JOIN usuarios u ON r.id_empresa = u.id " +
+	                     "ORDER BY r.fecha_evento DESC";
+	        try (Connection con = ConexionController.getInstance().getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql);
+	             ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                Reserva r = new Reserva();
+	                r.setId(rs.getInt("id"));
+	                r.setFechaEvento(rs.getDate("fecha_evento").toLocalDate());
+	                r.setFechaReserva(rs.getTimestamp("fecha_reserva").toLocalDateTime());
+	                r.setNumInvitados(rs.getInt("num_invitados"));
+	                r.setEstado(rs.getString("estado"));
+	                Plantilla p = new Plantilla();
+	                p.setId(rs.getInt("id_plantilla"));
+	                p.setNombre(rs.getString("plantilla_nombre"));
+	                r.setPlantilla(p);
+	                // Cargar empresa (solo email para mostrar)
+	                Empresa emp = new Empresa(rs.getString("empresa_email"), "", "", "", Rol.EMPRESA);
+	                emp.setId(rs.getInt("id_empresa"));
+	                r.setEmpresa(emp);
+	                reservas.add(r);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return reservas;
+	    }
 
 	    // Asignar plantilla a reserva (CU07)
 	    public boolean asignarPlantilla(int idReserva, int idPlantilla) {
